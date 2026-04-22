@@ -1,0 +1,2 @@
+# Voting
+Ideal voting system
