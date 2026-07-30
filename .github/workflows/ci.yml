@@ -23,6 +23,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  rust:
+    name: cargo test
+    runs-on: ubuntu-latest
+    # The Rust port is the implementation the repository is moving to; the
+    # Python suite below stays until it is removed, so both engines are
+    # measured on every change in the meantime.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Toolchain
+        # rustup and a stable toolchain are preinstalled on ubuntu-latest, so
+        # no third-party action is needed to get a compiler.
+        run: |
+          rustup update stable --no-self-update
+          rustup default stable
+          rustup component add rustfmt clippy
+          cargo --version && rustc --version
+
+      - name: Format
+        run: cargo fmt --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Tests
+        run: cargo test
+
   test:
     name: pytest (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
