@@ -1,0 +1,23 @@
+[package]
+name = "voting"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic, invariant-preserving proportional allocation engine"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/dermot-r-cochran/Voting"
+readme = "README.md"
+
+[dependencies]
+# Exact rational arithmetic, the Rust counterpart of Python's fractions.Fraction.
+# BigRational rather than Ratio<i64>: surplus transfer multiplies fractions
+# repeatedly, so denominators grow, and a fixed-width numerator would overflow
+# exactly where the arithmetic is supposed to be exact.
+num-rational = "0.4"
+num-bigint = "0.4"
+num-traits = "0.2"
+
+[profile.release]
+# The invariant assertions in allocation.rs are the point of the crate, not a
+# debug aid - see the module docs. debug_assertions stays on in release so
+# they cannot be optimised away by a downstream build profile.
+debug-assertions = true
