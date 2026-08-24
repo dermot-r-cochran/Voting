@@ -6,8 +6,9 @@
 //!    (exact rationals) summing to exactly 1.
 //! 2. **Aggregation** – normalised weights are summed across voters, giving
 //!    per-candidate totals whose grand sum equals the number of voters.
-//! 3. **STV quota allocation** (phase 1) – a Droop quota is computed and any
-//!    candidate reaching it is awarded a slot. Surplus weight is redistributed
+//! 3. **STV quota allocation** (phase 1) – a quota is computed (see
+//!    `allocate_slots` for its exact form and how it differs from the
+//!    classical Droop quota) and any candidate reaching it is awarded a slot. Surplus weight is redistributed
 //!    proportionally across each voter's remaining candidates.
 //! 4. **Largest-remainder allocation** (phase 2) – slots unfilled by phase 1
 //!    are distributed by the Hamilton method, with deterministic tie-breaking.
@@ -232,8 +233,15 @@ pub fn allocate_slots(
         .map(|v| normalize_voter(v, &candidate_ids))
         .collect::<Result<_, _>>()?;
 
-    // Droop quota: floor(total_weight / n_slots) + 1, and total_weight is
-    // n_voters, so this is the classical Droop quota.
+    // Quota: floor(n_voters / n_slots) + 1. NOTE this is NOT the classical
+    // Droop quota, which is floor(votes / (seats + 1)) + 1 - the divisor here
+    // is n_slots, not n_slots + 1, so this quota is strictly larger and
+    // phase 1 elects less eagerly (an earlier comment called it "the
+    // classical Droop quota", which the formula never was). It is the
+    // behaviour the Python original shipped and the golden parity suite
+    // pins: changing the divisor is a behavioural change that would alter
+    // allocations and requires regenerating tests/golden/expected.txt as a
+    // deliberate decision, not a drive-by correction.
     let quota = rational_from_usize(n_voters / n_slots_usize + 1);
 
     let mut allocated: BTreeMap<String, u64> =
