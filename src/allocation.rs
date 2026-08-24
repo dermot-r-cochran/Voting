@@ -233,15 +233,16 @@ pub fn allocate_slots(
         .map(|v| normalize_voter(v, &candidate_ids))
         .collect::<Result<_, _>>()?;
 
-    // Quota: floor(n_voters / n_slots) + 1. NOTE this is NOT the classical
-    // Droop quota, which is floor(votes / (seats + 1)) + 1 - the divisor here
-    // is n_slots, not n_slots + 1, so this quota is strictly larger and
-    // phase 1 elects less eagerly (an earlier comment called it "the
-    // classical Droop quota", which the formula never was). It is the
-    // behaviour the Python original shipped and the golden parity suite
-    // pins: changing the divisor is a behavioural change that would alter
+    // Quota: floor(n_voters / n_slots) + 1. This is DELIBERATELY this
+    // engine's own formula, not the classical Droop quota (which is
+    // floor(votes / (seats + 1)) + 1) - ruled by the author on 2026-08-24:
+    // the engine does not need to follow Droop exactly, and this divisor is
+    // the intended behaviour, not an approximation of Droop. The practical
+    // difference: this quota is strictly larger, so phase 1 elects less
+    // eagerly and more slots fall through to the largest-remainder phase.
+    // The golden parity suite pins it; changing the divisor would alter
     // allocations and requires regenerating tests/golden/expected.txt as a
-    // deliberate decision, not a drive-by correction.
+    // deliberate decision.
     let quota = rational_from_usize(n_voters / n_slots_usize + 1);
 
     let mut allocated: BTreeMap<String, u64> =

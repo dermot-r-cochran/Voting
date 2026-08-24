@@ -48,10 +48,11 @@ make a red test green.
 
 One standing example: the quota is `floor(n_voters / n_slots) + 1`, which is
 *not* the classical Droop quota (`floor(votes / (seats + 1)) + 1`) — the
-divisor differs, so phase 1 elects less eagerly. That is the Python original's
-behaviour and the golden suite pins it; the comment at the computation site in
-`allocation.rs` records exactly this. Switching to classical Droop would be a
-behavioural decision, not a correction.
+divisor differs, so phase 1 elects less eagerly. **Ruled by the author on
+2026-08-24: this is deliberately the engine's own formula** — it does not
+need to follow Droop exactly — so the question is settled, not open. The
+golden suite pins the behaviour; the comment at the computation site in
+`allocation.rs` records the ruling.
 
 ## Layer 3 — property-based tests (`tests/properties.rs`, proptest)
 
