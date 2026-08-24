@@ -21,3 +21,9 @@ num-traits = "0.2"
 # debug aid - see the module docs. debug_assertions stays on in release so
 # they cannot be optimised away by a downstream build profile.
 debug-assertions = true
+
+[dev-dependencies]
+# Property-based testing over allocate_slots's invariants (tests/properties.rs).
+# The golden parity suite pins 300 fixed points; proptest explores the space
+# between them with the same invariants the engine asserts internally.
+proptest = "1"
