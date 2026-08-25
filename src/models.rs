@@ -183,17 +183,87 @@ impl Score {
     }
 }
 
-/// Format an `f64` the way Python's `str()` does for the cases that matter
-/// here: shortest representation that round-trips, without exponent notation
-/// for the magnitudes a ballot score realistically takes.
+/// Format an `f64` the way Python's `str()` does for the purpose of
+/// [`Score::from_f64`]: the shortest decimal representation that round-trips,
+/// in plain (non-exponent) notation.
 fn format_shortest(value: f64) -> String {
     let s = format!("{value}");
-    if s.contains(['e', 'E']) {
-        // Rust switches to exponent form only for extreme magnitudes. Expand
-        // it rather than failing, so from_f64 never rejects a finite value.
-        return format!("{value:.*}", 340);
+    match s.split_once(['e', 'E']) {
+        // Rust's `Display` for `f64` currently never emits exponent notation
+        // for a finite value - it prints every digit, even for 1e300 or
+        // 5e-324 - so this branch is defence against that changing in a
+        // future std. It shifts the decimal point within the shortest
+        // representation rather than re-expanding the binary value, which
+        // would break the shortest-decimal contract (the exact expansion of
+        // the double nearest 1e-30 begins 0.00…0100000000000000008333…).
+        Some((mantissa, exponent)) => expand_exponent(mantissa, exponent),
+        None => s,
     }
-    s
+}
+
+/// Expand `<mantissa>e<exponent>` scientific notation into plain decimal
+/// notation by shifting the decimal point, preserving the mantissa's digits
+/// exactly.
+fn expand_exponent(mantissa: &str, exponent: &str) -> String {
+    let exponent: i64 = exponent
+        .parse()
+        .expect("exponent of a formatted finite f64 is a small integer");
+    let (sign, unsigned) = match mantissa.strip_prefix('-') {
+        Some(rest) => ("-", rest),
+        None => ("", mantissa),
+    };
+    let (int_part, frac_part) = unsigned.split_once('.').unwrap_or((unsigned, ""));
+    let digits = format!("{int_part}{frac_part}");
+    // Where the decimal point lands within `digits` after applying the shift.
+    let point = int_part.len() as i64 + exponent;
+    if point <= 0 {
+        format!("{sign}0.{}{digits}", "0".repeat((-point) as usize))
+    } else if point as usize >= digits.len() {
+        format!(
+            "{sign}{digits}{}",
+            "0".repeat(point as usize - digits.len())
+        )
+    } else {
+        let (whole, frac) = digits.split_at(point as usize);
+        format!("{sign}{whole}.{frac}")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // The expansion branch in `format_shortest` is unreachable through the
+    // public API today (see the canary below), so it is exercised directly.
+    #[test]
+    fn expand_exponent_shifts_the_point_without_reexpanding() {
+        assert_eq!(expand_exponent("1", "300"), format!("1{}", "0".repeat(300)));
+        assert_eq!(
+            expand_exponent("1", "-30"),
+            format!("0.{}1", "0".repeat(29))
+        );
+        assert_eq!(expand_exponent("1.2345", "2"), "123.45");
+        assert_eq!(expand_exponent("1.2345", "-2"), "0.012345");
+        assert_eq!(expand_exponent("9.75", "5"), "975000");
+        assert_eq!(expand_exponent("-9.75", "5"), "-975000");
+        assert_eq!(
+            expand_exponent("5", "-324"),
+            format!("0.{}5", "0".repeat(323))
+        );
+    }
+
+    // Canary: `Display` for `f64` emits no exponent for any finite value. If
+    // a future std changes that, this fails loudly and the expansion branch
+    // above starts carrying real traffic.
+    #[test]
+    fn display_never_emits_an_exponent_for_finite_values() {
+        for value in [1e300, 1e-30, 5e-324, f64::MAX, f64::MIN_POSITIVE] {
+            assert!(
+                !format!("{value}").contains(['e', 'E']),
+                "Display now formats {value:?} with an exponent"
+            );
+        }
+    }
 }
 
 /// A voter with graded preferences over a set of candidates.

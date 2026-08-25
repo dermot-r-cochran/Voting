@@ -13,16 +13,24 @@
 //! 4. **Largest-remainder allocation** (phase 2) – slots unfilled by phase 1
 //!    are distributed by the Hamilton method, with deterministic tie-breaking.
 //!
-//! Invariants (asserted at every phase boundary)
-//! ---------------------------------------------
+//! Invariants
+//! ----------
+//! Asserted at phase boundaries:
 //! * Total normalised voter weight = number of voters
 //! * Total allocated slots = `n_slots`
-//! * Every surplus transfer conserves total weight exactly
-//! * Tie-breaking is purely deterministic (lexicographic candidate id)
 //!
 //! These are `assert!`, not `debug_assert!`, and `Cargo.toml` keeps
 //! `debug-assertions` on in release. An allocation that silently violated
 //! conservation would be worse than one that stopped.
+//!
+//! Held by construction rather than asserted:
+//! * A surplus transfer conserves total weight exactly whenever the surplus
+//!   has a recipient. A voter with no remaining preferences has their share
+//!   absorbed rather than redistributed - deliberately, matching the original
+//!   engine, and the golden suite pins it - so total weight can shrink during
+//!   phase 1, never grow. This is why slot conservation is what gets
+//!   asserted: it holds unconditionally, while weight conservation does not.
+//! * Tie-breaking is purely deterministic (lexicographic candidate id)
 //!
 //! Determinism note: every collection here is ordered (`BTreeMap`/`BTreeSet`),
 //! so iteration order is a property of the data rather than of hashing. The

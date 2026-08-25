@@ -10,8 +10,12 @@ random.
 An allocation engine that silently violated conservation would be worse than
 one that stopped. So the invariants declared in `src/allocation.rs`'s module
 docs — total normalised weight = number of voters, total allocated slots =
-`n_slots`, exact surplus conservation, deterministic tie-breaking — are treated
-as the specification, and every layer below checks them from a different angle.
+`n_slots`, surplus conservation wherever a surplus has a recipient, and
+deterministic tie-breaking — are treated as the specification, and every layer
+below checks them from a different angle. (Weight conservation is qualified
+because a voter with no remaining preferences has their surplus absorbed, so
+slot conservation is the invariant that holds unconditionally and gets
+asserted; the module docs record the distinction.)
 
 ## Layer 0 — runtime asserts that cannot be compiled away
 
@@ -30,8 +34,12 @@ time; these verify it on every real run.
   a parsing bug silently mis-weights a ballot rather than failing anywhere
   visible. Covers `from_decimal_str` exactness (`"0.1"` → exactly 1/10),
   lopsided forms (`"1."`, `".5"`), the rejection table, negative zero,
-  `from_f64`'s shortest-decimal contract and its exponent-expansion path
-  (`1e300`, `1e-30`), and the error `Display` strings.
+  `from_f64`'s shortest-decimal contract including extreme magnitudes
+  (`1e300`, `1e-30`), and the error `Display` strings. The private
+  exponent-expansion fallback in `src/models.rs` is unit-tested inline there
+  (it is unreachable through the public API — `Display` for `f64` never emits
+  exponent notation for a finite value — and a canary test fails loudly if a
+  future std changes that).
 
 ## Layer 2 — the golden parity suite (`tests/parity.rs`)
 
