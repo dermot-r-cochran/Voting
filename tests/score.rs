@@ -124,9 +124,12 @@ fn from_f64_rejects_non_finite_and_negative_values() {
 }
 
 #[test]
-fn from_f64_expands_exponent_notation_rather_than_rejecting_it() {
-    // Rust formats these magnitudes with an exponent; format_shortest expands
-    // them so the decimal parser still succeeds.
+fn from_f64_is_exact_at_extreme_magnitudes() {
+    // These take the ordinary path: `Display` for `f64` prints every digit
+    // rather than switching to exponent notation, so the shortest-decimal
+    // contract holds even here. The defensive exponent-expansion branch is
+    // unit-tested in `src/models.rs` alongside a canary that fails if
+    // `Display` ever starts emitting exponents.
     let large = Score::from_f64(1e300).unwrap();
     assert_eq!(
         *large.as_rational(),
