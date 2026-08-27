@@ -13,7 +13,8 @@ without ever creating or destroying a slot along the way.
    than silently ignored.
 2. **Aggregation** — normalised weights are summed per candidate, so the grand
    total equals the number of voters.
-3. **STV quota allocation** — a Droop quota, `floor(voters / slots) + 1`, is
+3. **STV quota allocation** — a quota of `floor(voters / slots) + 1` — this
+   engine's own formula, deliberately not the classical Droop quota — is
    computed; any candidate reaching it takes a slot, and its surplus is
    redistributed proportionally across each voter's remaining candidates.
 4. **Largest remainder** — slots that quota allocation could not fill are
