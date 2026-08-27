@@ -445,6 +445,24 @@ fn empty_candidates_rejected() {
     assert_eq!(err, AllocationError::EmptyCandidates);
 }
 
+// Regression: a duplicated candidate id used to reach the arithmetic, where
+// the raw total counted the id twice while the keyed weight map collapsed it,
+// tripping the normalisation invariant assert. Malformed input is rejected as
+// a typed error instead; the asserts stay for engine misbehaviour.
+#[test]
+fn duplicate_candidate_id_rejected() {
+    let voters = vec![voter("v1", &[("A", 1.0), ("B", 1.0)])];
+    let options = candidates(&["A", "A", "B"]);
+    assert_eq!(
+        allocate_slots(&voters, &options, 2).unwrap_err(),
+        AllocationError::DuplicateCandidate { id: "A".into() }
+    );
+    assert_eq!(
+        compute_aggregated_weights(&voters, &options).unwrap_err(),
+        AllocationError::DuplicateCandidate { id: "A".into() }
+    );
+}
+
 #[test]
 fn single_voter_single_candidate() {
     let voters = vec![voter("v1", &[("A", 7.0)])];
