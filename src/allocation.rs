@@ -59,6 +59,15 @@ pub enum AllocationError {
         /// The offending voter's id.
         voter: String,
     },
+    /// The candidate list contains the same id more than once. Candidates are
+    /// keyed by id throughout, so a duplicate would silently collapse two
+    /// entries into one; it is rejected up front instead of tripping the
+    /// normalisation invariant, which exists to catch engine misbehaviour,
+    /// not malformed input.
+    DuplicateCandidate {
+        /// The id that appears more than once.
+        id: String,
+    },
 }
 
 impl std::fmt::Display for AllocationError {
@@ -75,6 +84,9 @@ impl std::fmt::Display for AllocationError {
                     "voter {voter:?} has a zero-sum ballot - cannot normalise weights"
                 )
             }
+            Self::DuplicateCandidate { id } => {
+                write!(f, "candidate id {id:?} appears more than once")
+            }
         }
     }
 }
@@ -83,6 +95,15 @@ impl std::error::Error for AllocationError {}
 
 fn rational_from_usize(value: usize) -> BigRational {
     BigRational::from_integer(BigInt::from(value))
+}
+
+/// The first candidate id that appears more than once, if any.
+fn find_duplicate_candidate(candidates: &[Candidate]) -> Option<&str> {
+    let mut seen = BTreeSet::new();
+    candidates
+        .iter()
+        .find(|c| !seen.insert(c.id.as_str()))
+        .map(|c| c.id.as_str())
 }
 
 /// Convert a voter's raw scores to fractional weights summing to exactly 1.
@@ -127,11 +148,15 @@ pub fn normalize_voter(
 /// The returned weights sum to exactly the number of voters.
 ///
 /// # Errors
-/// Propagates [`AllocationError::ZeroSumBallot`] from [`normalize_voter`].
+/// [`AllocationError::DuplicateCandidate`] if a candidate id appears more than
+/// once; propagates [`AllocationError::ZeroSumBallot`] from [`normalize_voter`].
 pub fn compute_aggregated_weights(
     voters: &[Voter],
     candidates: &[Candidate],
 ) -> Result<BTreeMap<String, BigRational>, AllocationError> {
+    if let Some(id) = find_duplicate_candidate(candidates) {
+        return Err(AllocationError::DuplicateCandidate { id: id.to_string() });
+    }
     let candidate_ids: Vec<String> = candidates.iter().map(|c| c.id.clone()).collect();
 
     let mut aggregated: BTreeMap<String, BigRational> = candidate_ids
@@ -215,7 +240,8 @@ pub fn order_candidates_by_weight<'a>(
 ///
 /// # Errors
 /// [`AllocationError::NonPositiveSlots`], [`AllocationError::EmptyVoters`],
-/// [`AllocationError::EmptyCandidates`], or [`AllocationError::ZeroSumBallot`].
+/// [`AllocationError::EmptyCandidates`], [`AllocationError::DuplicateCandidate`],
+/// or [`AllocationError::ZeroSumBallot`].
 pub fn allocate_slots(
     voters: &[Voter],
     candidates: &[Candidate],
@@ -229,6 +255,9 @@ pub fn allocate_slots(
     }
     if candidates.is_empty() {
         return Err(AllocationError::EmptyCandidates);
+    }
+    if let Some(id) = find_duplicate_candidate(candidates) {
+        return Err(AllocationError::DuplicateCandidate { id: id.to_string() });
     }
 
     let candidate_ids: Vec<String> = candidates.iter().map(|c| c.id.clone()).collect();

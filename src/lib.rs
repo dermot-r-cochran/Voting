@@ -2,8 +2,10 @@
 //!
 //! A port of this repository's Python engine. The algorithm is unchanged: raw
 //! ballot scores are normalised to exact fractional weights, aggregated, then
-//! converted into discrete slots by a Droop-quota STV phase followed by a
-//! largest-remainder phase, with lexicographic tie-breaking throughout.
+//! converted into discrete slots by an STV quota phase followed by a
+//! largest-remainder phase, with lexicographic tie-breaking throughout. The
+//! quota is this engine's own formula, not the classical Droop quota — see
+//! [`allocation::allocate_slots`] for its exact form.
 //!
 //! What the port changes is where the guarantees live. In Python, "scores are
 //! non-negative" was a check run after construction, and exactness depended on
