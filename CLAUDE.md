@@ -33,3 +33,27 @@ Two things to know before "fixing" anything:
 - **`tests/golden/` is behaviour-as-specification.** `expected.txt` holds the removed Python engine's own outputs on all 300 scenarios in `cases.txt`, and `tests/parity.rs` asserts this implementation still reproduces them. Any change that alters an allocation fails there rather than shipping quietly. An *intentional* behaviour change must regenerate `expected.txt` as a deliberate, reviewed decision in the same PR — never patch individual expected lines to make a red test green.
 
 The other test layers: `tests/allocation.rs` (hand-built per-phase scenarios plus every rejection path) and `tests/score.rs` (the crate's only parsing surface) are the unit/integration layer; `tests/properties.rs` (proptest) searches the space between the golden fixed points for counterexamples to six invariant properties. On a proptest failure, the shrunken counterexample is the bug report — add it to `tests/allocation.rs` as a named regression case before fixing. Full rationale and extension rules: `TestingStrategy.md`.
+
+## Related repositories
+
+The map of Dermot's public repositories and what crosses between them is
+`RELATED-REPOSITORIES.md` in `dermot-r-cochran/star-rangers`; this section
+names only this repository's own neighbours (added 2026-09-29 at his
+direction).
+
+- **`dermot-r-cochran/star-rangers`** describes this crate in public. Its About
+  page (*The engineering behind the record*) names Voting as lineage — exact
+  arithmetic, conservation asserted at every phase boundary, a loud stop
+  preferred to a silent error — and its codex entry *Three Disciplines of the
+  Record* mirrors that creed in-world as a seat-allocation protocol. A change
+  to the invariants, the quota ruling, a rename or a retirement here makes
+  that description false; say so in the pull request and expect a follow-up
+  there.
+- **`dermot-r-cochran/foundation-model`** has an expertise-weighted voting
+  module. It shares a word with this crate and nothing else; neither is a
+  reference for the other.
+- **Siblings by convention:** the account's engineering repositories all
+  carry a `TestingStrategy.md` in the same shape as this one's. This is the
+  only Rust repository among them, so the fmt/clippy/test gate has no sibling
+  to compare against; the golden-suite idea (behaviour as specification) is
+  this crate's own.
