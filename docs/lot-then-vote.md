@@ -109,6 +109,29 @@ considered:
 
 Grouping inside the chamber is free. An advisory chamber needs no whips.
 
+## Sizing (*decided*, 6 October 2026)
+
+The lower house has as many seats as the cube root of the voting
+population. The upper house has about a third of that. The cabinet, or
+executive council, has about a quarter of the upper house again, not
+counting deputy ministers. The first rule is Taagepera's cube root law
+(1972), which most national assemblies already sit near; the other two are
+the author's, and they put a chamber of the drawn at a size where every
+member can know every other, and an executive at a size that can meet
+around one table.
+
+| Voting population | Lower house | Upper house | Cabinet |
+| --- | --- | --- | --- |
+| 1 million | 100 | 33 | 8 |
+| 3.5 million (Ireland) | 152 | 51 | 13 |
+| 50 million | 368 | 123 | 31 |
+| 240 million | 621 | 207 | 52 |
+
+Ireland's Dáil, Seanad and cabinet ceiling (174, 60 and 15) sit close to
+the row for its electorate, which is why the rule reads as a description
+before it reads as a reform. A pool of drawn candidates is sized from the
+same arithmetic: so many names per seat, the seat count fixed by the rule.
+
 ## Where it applies first
 
 - **A local council.** Article 28A of the Irish Constitution leaves council
