@@ -49,6 +49,16 @@ direction).
   to the invariants, the quota ruling, a rename or a retirement here makes
   that description false; say so in the pull request and expect a follow-up
   there.
+- **`dermot-r-cochran/virtual-anthropology`** carries the same design note as
+  `docs/lot-then-vote.md` here (a chamber whose candidates are drawn by lot
+  and then elected as normal; the author's decisions of 2026-10-06 are marked
+  in it), read against the Archipelago's governance at
+  `the-archipelago/docs/lot-then-vote.md`. The two notes say the same thing;
+  a decision changed in one is changed in the other, in the same day's pull
+  requests. Nothing in the engine depends on the note, and
+  `examples/tenure.rs` (the note's toy model of incumbency) is the only
+  randomness anywhere in this repository: a fixed-seed xorshift in an
+  example, never in `src/`.
 - **`dermot-r-cochran/foundation-model`** has an expertise-weighted voting
   module. It shares a word with this crate and nothing else; neither is a
   reference for the other.
