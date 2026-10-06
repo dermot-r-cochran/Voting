@@ -17,20 +17,25 @@
 //! ----------
 //! Asserted at phase boundaries:
 //! * Total normalised voter weight = number of voters
+//! * Every surplus transfer conserves total weight exactly, counting surplus
+//!   absorbed where it has no recipient: after each phase-1 transfer, the
+//!   voters' total weight plus the running absorbed total = number of voters
 //! * Total allocated slots = `n_slots`
 //!
 //! These are `assert!`, not `debug_assert!`, and `Cargo.toml` keeps
 //! `debug-assertions` on in release. An allocation that silently violated
 //! conservation would be worse than one that stopped.
 //!
-//! Held by construction rather than asserted:
-//! * A surplus transfer conserves total weight exactly whenever the surplus
-//!   has a recipient. A voter with no remaining preferences has their share
-//!   absorbed rather than redistributed - deliberately, matching the original
-//!   engine, and the golden suite pins it - so total weight can shrink during
-//!   phase 1, never grow. This is why slot conservation is what gets
-//!   asserted: it holds unconditionally, while weight conservation does not.
-//! * Tie-breaking is purely deterministic (lexicographic candidate id)
+//! A voter with no remaining preferences has their share of a surplus
+//! absorbed rather than redistributed - deliberately, matching the original
+//! engine, and the golden suite pins it - so the voters' own weight can
+//! shrink during phase 1, never grow. The absorbed total is what makes that
+//! shrinkage accountable rather than silent.
+//!
+//! Held by construction and tested rather than asserted:
+//! * Tie-breaking is purely deterministic (lexicographic candidate id);
+//!   properties 2-4 of `tests/properties.rs` (numbered in
+//!   `TestingStrategy.md`, layer 3) test it
 //!
 //! Determinism note: every collection here is ordered (`BTreeMap`/`BTreeSet`),
 //! so iteration order is a property of the data rather than of hashing. The
@@ -286,6 +291,11 @@ pub fn allocate_slots(
         candidate_ids.iter().map(|id| (id.clone(), 0u64)).collect();
     let mut remaining: BTreeSet<String> = candidate_ids.iter().cloned().collect();
     let mut slots_remaining = n_slots_usize;
+    // Surplus with no recipient (see below). Weight leaves the voters only by
+    // this route, so the voters' total weight plus `absorbed` is the number
+    // of voters after every transfer, and is asserted to be.
+    let mut absorbed = BigRational::zero();
+    let n_voters_rational = rational_from_usize(n_voters);
 
     // ---- Phase 1: STV quota allocation with surplus transfer --------------
     while slots_remaining > 0 && !remaining.is_empty() {
@@ -339,6 +349,7 @@ pub fn allocate_slots(
 
             if remaining.is_empty() {
                 // Nothing left to receive the surplus; it is absorbed here.
+                absorbed += voter_surplus;
                 continue;
             }
 
@@ -353,11 +364,26 @@ pub fn allocate_slots(
                     let share = voter_surplus.clone() * (w.clone() / future_total.clone());
                     weights.insert(id.clone(), w + share);
                 }
+            } else {
+                // The voter has no remaining preferences, so the surplus is
+                // absorbed; slot conservation is maintained by the phases
+                // below, and asserted at the end.
+                absorbed += voter_surplus;
             }
-            // If future_total is zero the voter has no remaining preferences
-            // and the surplus is absorbed; slot conservation is maintained by
-            // the phases below, and asserted at the end.
         }
+
+        // Weight conservation across the transfer, counting absorbed surplus:
+        // every share redistributed above sums exactly to the surplus it came
+        // from, so nothing is created and nothing lost unaccounted.
+        let voter_total = current_weights
+            .iter()
+            .flat_map(|w| w.values())
+            .fold(BigRational::zero(), |acc, w| acc + w);
+        assert!(
+            voter_total.clone() + absorbed.clone() == n_voters_rational,
+            "surplus-conservation invariant violated after electing {winner:?}: \
+             voter weight {voter_total} + absorbed {absorbed} != {n_voters}"
+        );
     }
 
     // ---- Phase 2: largest remainder over the candidates still standing ----

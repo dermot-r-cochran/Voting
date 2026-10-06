@@ -395,6 +395,26 @@ fn surplus_transfer_conserves_slots() {
     assert_eq!(total_slots(&result), 3);
 }
 
+/// Every voter's only preference wins, so each surplus has no recipient and
+/// is absorbed - both ways it can happen. A is elected first (tie with B,
+/// smallest id): its supporters score nothing else, so their surplus is
+/// absorbed while B still stands. Then B is elected with nothing left
+/// standing, so its surplus is absorbed too. `allocate_slots` asserts after
+/// each transfer that the voters' weight plus the absorbed total is still
+/// the number of voters; reaching the result means both asserts held.
+#[test]
+fn surplus_absorbed_when_only_preference_wins() {
+    let mut voters: Vec<Voter> = (1..=5)
+        .map(|i| voter(&format!("a{i}"), &[("A", 1.0)]))
+        .collect();
+    voters.extend((1..=5).map(|i| voter(&format!("b{i}"), &[("B", 1.0)])));
+    // 10 voters, 5 slots: quota 3. Phase 1 elects A then B; the three slots
+    // left fall to the fallback, fair shares 1.5 each, the odd slot to A.
+    let result = allocate_slots(&voters, &candidates(&["A", "B"]), 5).unwrap();
+    assert_eq!(result["A"], 3);
+    assert_eq!(result["B"], 2);
+}
+
 #[test]
 fn no_slots_created_or_destroyed_by_rounding() {
     let voters: Vec<Voter> = (1..=3)

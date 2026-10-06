@@ -1,11 +1,19 @@
 //! Lot, then vote: how much of a chamber ends up long-serving?
 //!
-//! A toy model for `docs/lot-then-vote.md`. Each seat is contested every
-//! `TERM` years. The candidates are a fresh lottery pool plus, if the rule
+//! A toy model for `docs/lot-then-vote.md`. The clock runs in cycles of
+//! `TERM` years, `YEARS / TERM` cycles in all. Terms are staggered so a third
+//! of the seats fall vacant each cycle: any one seat is contested only every
+//! third cycle. The candidates are a fresh lottery pool plus, if the rule
 //! allows, the sitting member. The sitting member, when on the ballot, wins
 //! with probability `p_inc` (the incumbency advantage); otherwise a pool
-//! candidate takes the seat. Terms are staggered so a third of the seats fall
-//! vacant each cycle.
+//! candidate takes the seat.
+//!
+//! Service is counted in terms won and reported as terms times `TERM`, so
+//! "15+ yrs" in the table means three or more terms. On the simulated clock
+//! a term spans three cycles (15 years at `TERM` = 5), and the run of
+//! `YEARS` = 2,000 is about 133 elections per seat. The shares are counts of
+//! terms, so the stagger does not change them; only the labelling in years
+//! is a convention.
 //!
 //! Rules compared:
 //! - `always`: the sitting member may always stand (the original proposal)

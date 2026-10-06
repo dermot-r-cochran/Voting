@@ -1,6 +1,8 @@
 //! Voting - deterministic proportional allocation engine.
 //!
-//! A port of this repository's Python engine. The algorithm is unchanged: raw
+//! A port of a Python engine that has since been removed from this
+//! repository; its outputs survive as the golden suite in `tests/golden/`,
+//! which this crate must reproduce. The algorithm is unchanged: raw
 //! ballot scores are normalised to exact fractional weights, aggregated, then
 //! converted into discrete slots by an STV quota phase followed by a
 //! largest-remainder phase, with lexicographic tie-breaking throughout. The

@@ -72,10 +72,12 @@ members; a hard ceiling on careerism, but a visible two-tier chamber).
 
 ### What the toy model shows
 
-`cargo run --example tenure` runs a 60-seat chamber with five-year staggered
-terms for two thousand years under each renewal rule, with an incumbent who
-reaches the ballot winning 70% of the time, and reports how much of the
-chamber is long-serving. Share of members with 15 or more years' service:
+`cargo run --example tenure` runs a 60-seat chamber, a third of the seats
+contested each cycle, for about 133 elections per seat under each renewal
+rule, with an incumbent who reaches the ballot winning 70% of the time, and
+reports how much of the chamber is long-serving. Service is counted in terms
+and read as five years a term. Share of members with 15 or more years'
+service (three or more terms):
 
 | Rule | Incumbent wins 70% | Incumbent wins 85% |
 | --- | --- | --- |
