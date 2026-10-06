@@ -132,6 +132,42 @@ the row for its electorate, which is why the rule reads as a description
 before it reads as a reform. A pool of drawn candidates is sized from the
 same arithmetic: so many names per seat, the seat count fixed by the rule.
 
+## AI mediation and synthesis (*decided*, 6 October 2026)
+
+A drawn stranger needs, in a week, the map of their constituents that a
+party machine used to supply, and the quiet candidate lacks it most. That is
+the case for machine synthesis of what citizens say, and the reason to build
+it under constraints rather than not at all. Three jobs, kept apart:
+elicitation gathers what people say in their own words; synthesis finds the
+structure; mediation puts the structure back to the people and to the
+chamber in a form they can argue with. The author's ordering, opinions over
+values over needs, is a depth ordering: opinions change weekly, values are
+slower and conflict within one person, needs are few and are where people
+who disagree about everything else agree.
+
+The rules, each answering a known failure:
+
+- every claim in a synthesis cites the utterances behind it, or it is the
+  machine's opinion;
+- disagreement is represented as structure, clusters and bridges, never as
+  one paragraph that sands off the minority;
+- interpretation is never generated; the machine clusters and quotes, and
+  saying what the structure means is a signed human act;
+- several mediators rather than one, with their agreement reported, so a
+  structure that survives a change of method can be told from an artefact;
+- the synthesis is a briefing to the drawn chamber, whose members may dissent
+  from it on the record, with the dissents published beside it;
+- confidence is carried as how many, how stable, how contested, with
+  contradictions tracked rather than resolved.
+
+The reference implementation is `episteme/population.py` in
+`dermot-r-cochran/swarm` (ADR-0004 there), which emits cited structure,
+OPINION claims and no beliefs, and can produce no interpretation. Its first
+population is The Archipelago's simulated citizens, read from a published
+export of `dermot-r-cochran/virtual-anthropology`, who have no privacy to
+lose and a hash-chained record to check the synthesis against. Its home in
+this design is the alumni college's briefing of the newly drawn.
+
 ## Where it applies first
 
 - **A local council.** Article 28A of the Irish Constitution leaves council
