@@ -26,15 +26,18 @@ the result: ordering is by accumulated weight alone (*open ordering*).
 
 ## The invariants
 
-These are the point of the engine, and they are asserted at every phase
-boundary rather than assumed:
+These are the point of the engine. The first three are asserted at every
+phase boundary rather than assumed; the fourth is tested:
 
 - total normalised voter weight equals the number of voters
 - total allocated slots equals the number requested
-- every surplus transfer conserves total weight exactly
-- tie-breaking is deterministic
+- every surplus transfer conserves total weight exactly, counting surplus
+  absorbed where it has no recipient (a voter with no remaining preferences)
+- tie-breaking is deterministic, tested by properties 2–4 in
+  `tests/properties.rs` (same input, candidate order, voter order) rather
+  than asserted
 
-They are `assert!`, not `debug_assert!`, and `Cargo.toml` keeps
+The asserts are `assert!`, not `debug_assert!`, and `Cargo.toml` keeps
 `debug-assertions` enabled in release builds. An allocation that silently
 violated conservation would be worse than one that stopped.
 

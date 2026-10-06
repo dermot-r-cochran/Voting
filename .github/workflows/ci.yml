@@ -3,12 +3,14 @@ name: CI
 # Runs the allocation engine's test suite on every pull request and on
 # pushes to main.
 #
-# The suite is the whole point of this project: allocation.py declares its
-# invariants in its header (total normalised weight = len(voters), total
-# allocated slots = n_slots, exact surplus conservation, deterministic
-# tie-breaking) and tests/test_allocation.py checks them. Invariants that
-# are only checked when someone remembers to run pytest are not invariants
-# yet.
+# The suite is the whole point of this project: src/allocation.rs declares
+# the crate's invariants in its module docs (total normalised weight = number
+# of voters, total allocated slots = n_slots, surplus conservation counting
+# absorbed surplus, deterministic tie-breaking), asserts the first three at
+# runtime, and tests/ checks all four. The removed Python engine survives
+# only as tests/golden/, the specification tests/parity.rs holds this crate
+# to. Invariants that are only checked when someone remembers to run the
+# tests are not invariants yet.
 
 on:
   pull_request:
@@ -26,9 +28,6 @@ jobs:
   rust:
     name: cargo test
     runs-on: ubuntu-latest
-    # The Rust port is the implementation the repository is moving to; the
-    # Python suite below stays until it is removed, so both engines are
-    # measured on every change in the meantime.
     steps:
       - name: Checkout
         uses: actions/checkout@v4

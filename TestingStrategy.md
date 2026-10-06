@@ -10,12 +10,13 @@ random.
 An allocation engine that silently violated conservation would be worse than
 one that stopped. So the invariants declared in `src/allocation.rs`'s module
 docs — total normalised weight = number of voters, total allocated slots =
-`n_slots`, surplus conservation wherever a surplus has a recipient, and
-deterministic tie-breaking — are treated as the specification, and every layer
-below checks them from a different angle. (Weight conservation is qualified
-because a voter with no remaining preferences has their surplus absorbed, so
-slot conservation is the invariant that holds unconditionally and gets
-asserted; the module docs record the distinction.)
+`n_slots`, surplus conservation counting surplus absorbed where it has no
+recipient, and deterministic tie-breaking — are treated as the specification,
+and every layer below checks them from a different angle. (A voter with no
+remaining preferences has their surplus absorbed, so the voters' own weight
+can shrink in phase 1; phase 1 keeps the absorbed total and asserts that voter
+weight plus absorbed equals the number of voters after every transfer.
+Tie-breaking is tested by properties 2–4 below rather than asserted.)
 
 ## Layer 0 — runtime asserts that cannot be compiled away
 
