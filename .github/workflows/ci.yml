@@ -49,5 +49,7 @@ jobs:
 
       - name: Tests
         # Unit tests, doc tests, and tests/parity.rs - the golden suite holding
-        # the removed Python engine's own outputs as the specification.
+        # the removed Python engine's own outputs as the specification. Also
+        # tests/docs.rs, the stdlib doc check: README links, front matter,
+        # stated counts and cited test names against the tree.
         run: cargo test
