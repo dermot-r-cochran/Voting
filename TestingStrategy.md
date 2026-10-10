@@ -82,11 +82,23 @@ On a proptest failure, the shrunken counterexample it prints is the bug
 report; add it to `tests/allocation.rs` as a named regression case before
 fixing.
 
+## Layer 4 — the doc check (`tests/docs.rs`)
+
+Added 2026-10-10 under the README-proof convention: every capability the
+README claims names the test that proves it, as `tests/<file>.rs::<name>`,
+and `tests/docs.rs` (standard library only, no new dependency) fails if a
+cited test does not exist, a relative link in `README.md`, `CLAUDE.md`, this
+file or `docs/` does not resolve, a Markdown file carries more than one
+front-matter block, or a count stated in the prose ("300 scenarios", "six
+properties") no longer matches `tests/golden/cases.txt` or
+`tests/properties.rs`. It runs under `cargo test`, so CI needs no extra step.
+
 ## CI (`.github/workflows/ci.yml`)
 
 `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`
-(unit + doc + parity + properties) on every PR and push to `main`. There is no
-lockfile by design; the floor-pinned dependencies resolve fresh.
+(unit + doc + parity + properties + the doc check) on every PR and push to
+`main`. There is no lockfile by design; the floor-pinned dependencies resolve
+fresh.
 
 ## Extending
 
