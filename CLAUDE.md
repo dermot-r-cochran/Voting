@@ -41,7 +41,7 @@ Dermot's direction, 2026-10-11: the account-wide split recorded in `star-rangers
 - **Haiku: reading and trivial fixes.** Read-only searches, summarising a failing CI log, and simple `cargo fmt` or `cargo clippy` fixes. The three CI gates catch its mistakes.
 - **Sonnet: code and tests.** Logic changes and new tests in `tests/allocation.rs`, `tests/score.rs` and `tests/properties.rs`.
 - **Opus: the protected parts.** `tests/golden/` and any regeneration of `expected.txt`, the `assert!`s and `debug-assertions` setting that enforce conservation, and the quota ruling. No model below Opus edits these, even where a gate would catch the mistake.
-- **Opus reviews and approves** a Haiku or Sonnet subagent's diff, and it merges when CI is green.
+- **Opus reviews and approves** a Haiku or Sonnet subagent's diff, and it merges when CI is green. Opus escalates where a change needs a judgement it should not make alone: to Fable where one is available, otherwise to Dermot directly as choices (Dermot, 2026-10-11).
 - **Chrome extension:** Opus for anything that signs in, submits or posts; Sonnet for read-only browsing; never Haiku. The extension acts in Dermot's own Chrome with his sign-ins, and a web page can carry text written to steer the model.
 
 A subagent runs on its parent session's model unless the call names another, so name the model on every delegation.
