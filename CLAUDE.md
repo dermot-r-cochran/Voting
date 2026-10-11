@@ -34,6 +34,18 @@ Two things to know before "fixing" anything:
 
 The other test layers: `tests/allocation.rs` (hand-built per-phase scenarios plus every rejection path) and `tests/score.rs` (the crate's only parsing surface) are the unit/integration layer; `tests/properties.rs` (proptest) searches the space between the golden fixed points for counterexamples to six invariant properties. On a proptest failure, the shrunken counterexample is the bug report — add it to `tests/allocation.rs` as a named regression case before fixing. Full rationale and extension rules: `TestingStrategy.md`.
 
+## Which model does which work
+
+Dermot's direction, 2026-10-11: the account-wide split recorded in `star-rangers`' `CLAUDE.md`, applied here. Opus is the default. Fable is kept for narrative prose and image prompts and has no work in this repository.
+
+- **Haiku: reading and trivial fixes.** Read-only searches, summarising a failing CI log, and simple `cargo fmt` or `cargo clippy` fixes. The three CI gates catch its mistakes.
+- **Sonnet: code and tests.** Logic changes and new tests in `tests/allocation.rs`, `tests/score.rs` and `tests/properties.rs`.
+- **Opus: the protected parts.** `tests/golden/` and any regeneration of `expected.txt`, the `assert!`s and `debug-assertions` setting that enforce conservation, and the quota ruling. No model below Opus edits these, even where a gate would catch the mistake.
+- **Opus reviews and approves** a Haiku or Sonnet subagent's diff, and it merges when CI is green.
+- **Chrome extension:** Opus for anything that signs in, submits or posts; Sonnet for read-only browsing; never Haiku. The extension acts in Dermot's own Chrome with his sign-ins, and a web page can carry text written to steer the model.
+
+A subagent runs on its parent session's model unless the call names another, so name the model on every delegation.
+
 ## Related repositories
 
 The map of Dermot's public repositories and what crosses between them is
