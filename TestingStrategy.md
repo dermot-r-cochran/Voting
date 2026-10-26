@@ -41,6 +41,13 @@ time; these verify it on every real run.
   (it is unreachable through the public API — `Display` for `f64` never emits
   exponent notation for a finite value — and a canary test fails loudly if a
   future std changes that).
+- `tests/tenure.rs`: the table in `docs/lot-then-vote.md` against the toy
+  model in `examples/tenure.rs`, which it includes as a module. The note
+  says to read the ordering and not the digits, so the ordering of the three
+  renewal rules is the strict claim and each worded cell ("about a sixth")
+  is held to within a quarter of the fraction it names. Added 2026-10-26: the
+  example is a binary and the doc check reads prose, so until then nothing
+  failed when the model and the table parted.
 
 ## Layer 2 — the golden parity suite (`tests/parity.rs`)
 

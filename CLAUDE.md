@@ -12,7 +12,7 @@ It is a port of a Python engine that no longer exists in the repo; the Python en
 
 ```bash
 cargo test                                   # everything: unit + integration + parity + property + doc tests
-cargo test --test parity                     # one integration test file (allocation, score, parity, properties)
+cargo test --test parity                     # one integration test file (allocation, docs, parity, properties, score, tenure)
 cargo test surplus_transfer                  # tests whose names match a substring
 cargo clippy --all-targets -- -D warnings    # lint; CI fails on any warning
 cargo fmt --check                            # formatting; CI enforces

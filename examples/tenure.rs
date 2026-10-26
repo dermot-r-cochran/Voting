@@ -25,17 +25,19 @@
 //! on every run; this example has no bearing on the engine, which is
 //! deterministic by construction and contains no randomness at all.
 //!
-//! Run with `cargo run --example tenure`.
+//! Run with `cargo run --example tenure`. `tests/tenure.rs` includes this
+//! file as a module and holds the note's table to what `run` returns, which
+//! is why the model's items are `pub(crate)`.
 
 use std::collections::BTreeMap;
 
-const SEATS: usize = 60;
-const TERM: usize = 5;
-const YEARS: usize = 2000;
+pub(crate) const SEATS: usize = 60;
+pub(crate) const TERM: usize = 5;
+pub(crate) const YEARS: usize = 2000;
 const WARM_UP_YEARS: usize = 50;
 
 #[derive(Clone, Copy)]
-enum Rule {
+pub(crate) enum Rule {
     Always,
     Cap2,
     Decay,
@@ -66,14 +68,14 @@ impl Rng {
     }
 }
 
-struct Outcome {
-    mean_years: f64,
-    share_10_plus: f64,
-    share_15_plus: f64,
-    share_20_plus: f64,
+pub(crate) struct Outcome {
+    pub(crate) mean_years: f64,
+    pub(crate) share_10_plus: f64,
+    pub(crate) share_15_plus: f64,
+    pub(crate) share_20_plus: f64,
 }
 
-fn run(rule: Rule, p_inc: f64) -> Outcome {
+pub(crate) fn run(rule: Rule, p_inc: f64) -> Outcome {
     let mut rng = Rng(0x9E37_79B9_7F4A_7C15);
     // Terms served so far, per seat. 1 is a member in a first term.
     let mut tenure = [1usize; SEATS];
