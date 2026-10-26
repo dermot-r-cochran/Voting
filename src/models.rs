@@ -53,7 +53,11 @@ impl Candidate {
     }
 }
 
-/// A logical grouping of candidates (e.g. a political party).
+/// A logical grouping of candidates, such as the party a pool candidate
+/// belonged to before the draw. It is a label only: it is reported by
+/// `compute_group_weights` and used to filter results, and it never affects
+/// allocation. This matches the design note's ruling of 6 October 2026,
+/// "prior affiliation only" (`docs/lot-then-vote.md`, *Parties*).
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Group {
     /// Unique identifier.

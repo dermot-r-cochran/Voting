@@ -231,7 +231,7 @@ fn equal_preferences_tie() {
 
 #[test]
 fn exact_quota_threshold() {
-    // 4 voters, 2 slots → Droop quota = floor(4/2)+1 = 3. A is supported by
+    // 4 voters, 2 slots → quota = floor(4/2)+1 = 3 (the engine's own formula, not Droop). A is supported by
     // exactly three voters at full weight, so it hits quota exactly.
     let voters = vec![
         voter("v1", &[("A", 1.0), ("B", 0.0)]),
