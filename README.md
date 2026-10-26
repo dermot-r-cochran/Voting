@@ -104,6 +104,15 @@ this README or `docs/` does not resolve, a Markdown file carries two
 front-matter blocks, a count stated here (the 300 scenarios, the six
 properties) drifts from the tree, or a test cited above does not exist.
 
+## The design note
+
+[`docs/lot-then-vote.md`](./docs/lot-then-vote.md) is a design for a chamber
+whose candidates are drawn by lot and then elected as normal; the engine
+computes the second step. Nothing in the engine depends on the note.
+`examples/tenure.rs` is the note's toy model of incumbency
+(`cargo run --example tenure`), and the table the note draws from it is held
+to what the model prints (`tests/tenure.rs::the_tenure_table_in_the_note_matches_the_model`).
+
 ## History
 
 This engine was originally written in Python. The Rust port landed in #3, and
