@@ -9,7 +9,7 @@
 //!
 //! The scenarios cover 1-6 candidates, 1-12 voters, 1-12 slots, integral and
 //! four-decimal scores, optional groups, and five hand-built edge cases (a
-//! single candidate, an exact Droop quota, 100 slots over two candidates,
+//! single candidate, an exact quota, 100 slots over two candidates,
 //! decimal thirds, and an all-tied field).
 //!
 //! What is NOT covered here: rejection paths. Every generated scenario is
