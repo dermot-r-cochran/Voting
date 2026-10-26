@@ -240,6 +240,20 @@ For quieter members:
 
 - **Vetting.** Criteria must be in statute and narrow, or the pool quietly
   excludes the people a representative sample is meant to include.
+  *Considered, 26 October 2026: screening by AI.* The premise (the author's,
+  that day): there is no perfect candidate, only acceptable ones. Vetting is
+  therefore a floor, pass or fail, and never a ranking; above the floor the
+  lot chooses. Screening the drawn pool for suitability by a documented AI
+  process was weighed against that and is not recommended. Ranking assumes a
+  best candidate the premise denies, it brings back a chooser (whoever sets
+  the criteria and keeps the model), it favours the profile of past
+  office-holders, and it leaves a rejected candidate a score rather than a
+  reason to contest. GDPR's limit on solely automated decisions and the EU AI
+  Act's high-risk class for election uses would apply too. Recommended
+  instead: draw first, then check only the floor in statute (age, residency,
+  conflicts of interest) with deterministic published code, human review and
+  an appeal. Software may also run the stratified draw to quotas set in
+  public. It checks rules; it never judges suitability.
 - **Opt-out skew.** Pay and job protection fix part; redraw-to-quota fixes the
   rest.
 - **Pool size and run-in.** How many names per seat, and how long before
