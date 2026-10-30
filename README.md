@@ -127,6 +127,12 @@ implementation still reproduces them. The behaviour therefore outlived the
 implementation, and any future change that alters an allocation fails there
 rather than shipping quietly.
 
+## Related
+
+- [virtual-anthropology](https://github.com/dermot-r-cochran/virtual-anthropology) carries a companion of the design note, read against the Archipelago's governance at `the-archipelago/docs/lot-then-vote.md`.
+- [star-rangers](https://github.com/dermot-r-cochran/star-rangers) names this crate on its About page as lineage: exact arithmetic, conservation at every phase boundary, a loud stop preferred to a silent error.
+- How these and the author's other public repositories relate is kept in one map: [RELATED-REPOSITORIES.md](https://github.com/dermot-r-cochran/star-rangers/blob/main/RELATED-REPOSITORIES.md).
+
 ## Licence
 
 GPL-3.0-or-later. See [`LICENSE`](./LICENSE).
