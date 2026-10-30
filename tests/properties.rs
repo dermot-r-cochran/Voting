@@ -10,6 +10,8 @@
 //! * a voter's ballot is scale-free: multiplying all of one voter's scores by
 //!   a positive constant changes nothing (normalisation divides it out)
 //! * `normalize_voter` returns weights summing to exactly 1
+//! * group labels never influence the result: `Group` is a label only
+//!   (`src/models.rs`), so relabelling the candidates changes nothing
 //!
 //! Inputs are generated so every voter has at least one positive score - the
 //! zero-sum-ballot rejection path is covered by unit tests in
@@ -147,5 +149,28 @@ proptest! {
             let sum = weights.values().fold(BigRational::new(0.into(), 1.into()), |a, w| a + w);
             prop_assert_eq!(&sum, &one);
         }
+    }
+
+    #[test]
+    fn group_labels_never_influence_the_result(
+        s in scenario(),
+        labels in proptest::collection::vec(proptest::option::of(0u8..3), CANDIDATE_POOL.len()),
+    ) {
+        // `Group` is a label only (src/models.rs): it is reported by
+        // `compute_group_weights` and filters `order_candidates_by_weight`,
+        // and `allocate_slots` never reads it. Give each generated candidate
+        // a random group, or none, and the allocation must not move.
+        let unlabelled = allocate_slots(&s.voters, &s.candidates, s.n_slots).unwrap();
+        let labelled: Vec<Candidate> = s
+            .candidates
+            .iter()
+            .zip(&labels)
+            .map(|(c, label)| match label {
+                Some(g) => Candidate::in_group(c.id.clone(), format!("G{g}")),
+                None => Candidate::new(c.id.clone()),
+            })
+            .collect();
+        let with_labels = allocate_slots(&s.voters, &labelled, s.n_slots).unwrap();
+        prop_assert_eq!(unlabelled, with_labels);
     }
 }
