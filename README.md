@@ -101,7 +101,7 @@ cargo fmt --check
 CI runs all three on every pull request. `cargo test` also runs
 `tests/docs.rs`, a standard-library doc check that fails if a relative link in
 this README or `docs/` does not resolve, a Markdown file carries two
-front-matter blocks, a count stated here (the 300 scenarios, the six
+front-matter blocks, a count stated here (the 300 scenarios, the seven
 properties) drifts from the tree, or a test cited above does not exist.
 
 ## The design note

@@ -30,7 +30,8 @@ time; these verify it on every real run.
 - `tests/allocation.rs`: hand-built scenarios for each algorithm phase —
   normalisation, aggregation, quota election, surplus transfer, largest
   remainder, group weights, open ordering — plus every rejection path
-  (`NonPositiveSlots`, `EmptyVoters`, `EmptyCandidates`, `ZeroSumBallot`).
+  (`NonPositiveSlots`, `EmptyVoters`, `EmptyCandidates`, `ZeroSumBallot`,
+  `DuplicateCandidate`).
 - `tests/score.rs`: the crate's only parsing surface, tested directly, because
   a parsing bug silently mis-weights a ballot rather than failing anywhere
   visible. Covers `from_decimal_str` exactness (`"0.1"` → exactly 1/10),
@@ -74,8 +75,8 @@ golden suite pins the behaviour; the comment at the computation site in
 
 The golden suite pins fixed points; proptest searches the space between them
 (1–6 candidates, 1–10 voters, 1–12 slots, tenth-step decimal scores, every
-ballot kept non-zero-sum by construction). Six properties, ~256 random cases
-each per run:
+ballot kept non-zero-sum by construction). Seven properties, ~256 random
+cases each per run:
 
 1. allocation sums to exactly `n_slots`, every candidate present in the result
 2. determinism — same input, same output
@@ -84,6 +85,10 @@ each per run:
 5. ballot scale-freeness — multiplying scores by a positive constant changes
    nothing, because normalisation divides it out
 6. `normalize_voter` weights sum to exactly 1
+7. group labels never influence the result — `Group` is a label only
+   (`src/models.rs`), so giving the candidates any groups, or none, leaves
+   the allocation unchanged (added 2026-10-30; until then the label-only
+   claim was documented but not tested)
 
 On a proptest failure, the shrunken counterexample it prints is the bug
 report; add it to `tests/allocation.rs` as a named regression case before
@@ -96,7 +101,7 @@ README claims names the test that proves it, as `tests/<file>.rs::<name>`,
 and `tests/docs.rs` (standard library only, no new dependency) fails if a
 cited test does not exist, a relative link in `README.md`, `CLAUDE.md`, this
 file or `docs/` does not resolve, a Markdown file carries more than one
-front-matter block, or a count stated in the prose ("300 scenarios", "six
+front-matter block, or a count stated in the prose ("300 scenarios", "seven
 properties") no longer matches `tests/golden/cases.txt` or
 `tests/properties.rs`. It runs under `cargo test`, so CI needs no extra step.
 
