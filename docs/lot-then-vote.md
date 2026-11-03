@@ -258,7 +258,7 @@ For quieter members:
   rest.
 - **Pool size and run-in.** How many names per seat, and how long before
   polling day the draw happens. A year is the working assumption.
-- **The name.** "Lot, then vote" is a placeholder.
+- ~~**The name.**~~ Decided 3 November 2026: "Lot, then vote" is the name.
 
 ## Elsewhere in the account
 
