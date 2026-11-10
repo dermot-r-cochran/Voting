@@ -49,6 +49,16 @@ time; these verify it on every real run.
   is held to within a quarter of the fraction it names. Added 2026-10-26: the
   example is a binary and the doc check reads prose, so until then nothing
   failed when the model and the table parted.
+- `tests/sizing.rs`: the sizing table in `docs/lot-then-vote.md` against the
+  rule stated above it. The table is read out of the note, and each row is
+  recomputed from its own population in exact integers: the lower house is
+  the whole number nearest the cube root (checked by cubing, never by a
+  floating-point root), the upper house the nearest to a third of the lower,
+  the cabinet the nearest to a quarter of the upper. Nearest is how
+  every row of the table already rounds. Ireland's real figures, which the
+  note sets beside its row, are not checked: they are facts no tree can
+  check. Added 2026-11-10: the arithmetic was right, and until then nothing
+  would have failed had a row been added or edited with a slip in it.
 
 ## Layer 2 — the golden parity suite (`tests/parity.rs`)
 

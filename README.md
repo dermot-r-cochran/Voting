@@ -112,6 +112,9 @@ computes the second step. Nothing in the engine depends on the note.
 `examples/tenure.rs` is the note's toy model of incumbency
 (`cargo run --example tenure`), and the table the note draws from it is held
 to what the model prints (`tests/tenure.rs::the_tenure_table_in_the_note_matches_the_model`).
+The note's sizing table is held to the rule stated above it: the cube root,
+a third of that, a quarter of that again
+(`tests/sizing.rs::the_sizing_table_in_the_note_follows_its_rule`).
 
 ## History
 
