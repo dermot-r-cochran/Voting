@@ -44,3 +44,13 @@ pub use allocation::{
     order_candidates_by_weight, AllocationError,
 };
 pub use models::{Candidate, Group, Score, ScoreError, Voter};
+
+/// The README's Rust example, compiled and run as a doc test.
+///
+/// `cargo test` builds every Rust block in `README.md` against the crate as
+/// it stands, so the first code a reader copies cannot drift from the public
+/// API. Present only under `cfg(doctest)`: it adds nothing to the built crate
+/// or to its rendered documentation.
+#[cfg(doctest)]
+#[doc = include_str!("../README.md")]
+pub struct ReadmeDoctests;

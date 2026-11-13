@@ -115,6 +115,13 @@ front-matter block, or a count stated in the prose ("300 scenarios", "seven
 properties") no longer matches `tests/golden/cases.txt` or
 `tests/properties.rs`. It runs under `cargo test`, so CI needs no extra step.
 
+Added 2026-11-13: the README's Rust example is itself a doc test.
+`src/lib.rs` includes `README.md` under `cfg(doctest)`, so `cargo test`
+compiles and runs every Rust block in it against the crate as it stands. The
+doc check above reads prose and skips fenced code, so until then the first
+code a reader copies was the one thing in the README nothing proved; as first
+written it used `?` outside a function and did not compile when pasted.
+
 ## CI (`.github/workflows/ci.yml`)
 
 `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`

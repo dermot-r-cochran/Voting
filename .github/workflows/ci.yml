@@ -52,4 +52,6 @@ jobs:
         # the removed Python engine's own outputs as the specification. Also
         # tests/docs.rs, the stdlib doc check: README links, front matter,
         # stated counts and cited test names against the tree.
+        # The README's Rust example runs here too, as a doc test: src/lib.rs
+        # includes README.md under cfg(doctest).
         run: cargo test

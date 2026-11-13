@@ -69,16 +69,19 @@ be exact.
 A `Score` cannot hold a negative value, and is rational by construction:
 
 ```rust
-use voting::{allocate_slots, Candidate, Score, Voter};
+use voting::{allocate_slots, AllocationError, Candidate, Score, Voter};
 
-let voters = vec![
-    Voter::with_scores("v1", [("A", Score::from_int(3)), ("B", Score::from_int(1))]),
-    Voter::with_scores("v2", [("A", Score::from_int(1)), ("B", Score::from_int(3))]),
-];
-let candidates = vec![Candidate::new("A"), Candidate::new("B")];
+fn main() -> Result<(), AllocationError> {
+    let voters = vec![
+        Voter::with_scores("v1", [("A", Score::from_int(3)), ("B", Score::from_int(1))]),
+        Voter::with_scores("v2", [("A", Score::from_int(1)), ("B", Score::from_int(3))]),
+    ];
+    let candidates = vec![Candidate::new("A"), Candidate::new("B")];
 
-let result = allocate_slots(&voters, &candidates, 2)?;
-assert_eq!(result.values().sum::<u64>(), 2);
+    let result = allocate_slots(&voters, &candidates, 2)?;
+    assert_eq!(result.values().sum::<u64>(), 2);
+    Ok(())
+}
 ```
 
 `Score::from_decimal_str("0.1")` is exactly one tenth
