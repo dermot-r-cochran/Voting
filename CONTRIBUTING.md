@@ -37,4 +37,4 @@ Contributions are accepted under this repository's licence, GPL-3.0-or-later (`L
 
 ## Security
 
-Please don't describe a security problem in a public issue. Open an issue saying only that you have one, and a private way to send the details will be arranged.
+Please don't describe a security problem in a public issue or pull request. Report it privately instead, through the repository's **Security** tab (*Report a vulnerability*). Only the maintainer sees the report.
