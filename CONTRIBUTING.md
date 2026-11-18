@@ -4,7 +4,7 @@ Contributions are welcome: bug reports, fixes, tests, documentation and focused 
 
 ## Before you start
 
-- For anything beyond a small fix, open an issue first describing the problem and the change you have in mind, so the approach can be agreed before you spend time on it.
+- For anything beyond a small fix, you may find it useful to open an issue first describing the problem and the change you have in mind, before you spend time on it.
 - `tests/golden/` is behaviour as specification: it holds the outputs of the engine this crate was ported from. A change that alters an allocation fails there. An intentional behaviour change regenerates `expected.txt` as a reviewed decision in the same pull request; individual expected lines are never patched.
 - The quota, `floor(n_voters / n_slots) + 1`, is deliberate and settled, not a mistaken Droop quota.
 - The conservation checks are `assert!`, kept on in release builds. A change that weakens them will not be accepted.
@@ -37,4 +37,4 @@ Contributions are accepted under this repository's licence, GPL-3.0-or-later (`L
 
 ## Security
 
-Please don't describe a security problem in a public issue. Open an issue saying only that you have one, and a private way to send the details will be arranged.
+Please don't describe a security problem in a public issue or pull request. Report it privately instead, through the repository's **Security** tab (*Report a vulnerability*). Only the maintainer sees the report.
