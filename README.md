@@ -107,6 +107,15 @@ this README or `docs/` does not resolve, a Markdown file carries two
 front-matter blocks, a count stated here (the 300 scenarios, the seven
 properties) drifts from the tree, or a test cited above does not exist.
 
+To depend on a release from another crate, pin its tag in that crate's `Cargo.toml`:
+
+```toml
+[dependencies]
+voting = { git = "https://github.com/dermot-r-cochran/Voting", tag = "v0.1.0" }
+```
+
+No release is tagged yet; the first, `v0.1.0`, is owed. Until it is pushed, use `rev = "<commit SHA>"` in place of `tag`.
+
 ## The design note
 
 [`docs/lot-then-vote.md`](./docs/lot-then-vote.md) is a design for a chamber
