@@ -18,8 +18,12 @@ num-traits = "0.2"
 
 [profile.release]
 # The invariant assertions in allocation.rs are the point of the crate, not a
-# debug aid - see the module docs. debug_assertions stays on in release so
-# they cannot be optimised away by a downstream build profile.
+# debug aid - see the module docs. They are assert!, which no profile can
+# compile out, and that is the whole guarantee for a crate that depends on
+# this one: Cargo reads profiles from the root manifest of a build and
+# ignores a dependency's. debug_assertions stays on in release here as the
+# second lock, on this crate's own builds, where a debug_assert! that got in
+# would still run. tests/asserts.rs holds both.
 debug-assertions = true
 
 [dev-dependencies]

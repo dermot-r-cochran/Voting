@@ -21,9 +21,26 @@ Tie-breaking is tested by properties 2–4 below rather than asserted.)
 ## Layer 0 — runtime asserts that cannot be compiled away
 
 The invariant checks in `allocation.rs` are `assert!`, not `debug_assert!`,
-and `Cargo.toml` keeps `debug-assertions = true` in release so a downstream
-build profile cannot optimise them out. Tests verify behaviour at development
-time; these verify it on every real run.
+so no build profile can compile them out, and `Cargo.toml` keeps
+`debug-assertions = true` in release as a second lock on this crate's own
+builds, where a `debug_assert!` that got in would still run. Tests verify
+behaviour at development time; these verify it on every real run.
+
+Corrected 2026-11-23: this section used to credit the `Cargo.toml` setting
+with stopping a downstream build profile from optimising the checks out. It
+cannot. Cargo reads profiles from the root manifest of a build and ignores a
+dependency's: a release build of a crate depending on `v0.1.0`, its own
+release profile left at the default, compiles this one with no
+`-C debug-assertions=on`. For anyone who depends on the crate, the `assert!`
+is the whole guarantee.
+
+Added the same day: `tests/asserts.rs` holds this layer to its word. It fails
+if the code under `src/` uses a `debug_assert`, if any of the five checks in
+`allocation.rs` no longer has a plain `assert!` (each is named by the opening
+words of its panic message), or if the release profile loses the setting. It
+reads the source because nothing else can see the difference: `cargo test`
+builds with debug assertions on, so a check downgraded to `debug_assert!`, or
+deleted, would pass every other test here.
 
 ## Layer 1 — unit and integration tests (`tests/allocation.rs`, `tests/score.rs`)
 
