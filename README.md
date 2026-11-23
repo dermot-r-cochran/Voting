@@ -56,8 +56,11 @@ phase boundary rather than assumed; the fourth is tested:
   `tests/properties.rs::voter_order_never_influences_the_result`)
 
 The asserts are `assert!`, not `debug_assert!`, and `Cargo.toml` keeps
-`debug-assertions` enabled in release builds. An allocation that silently
-violated conservation would be worse than one that stopped.
+`debug-assertions` enabled in release builds
+(`tests/asserts.rs::no_invariant_check_is_a_debug_assert`,
+`tests/asserts.rs::every_invariant_check_keeps_its_assert`,
+`tests/asserts.rs::the_release_profile_keeps_debug_assertions`). An allocation
+that silently violated conservation would be worse than one that stopped.
 
 ## Exactness
 
