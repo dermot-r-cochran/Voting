@@ -114,7 +114,7 @@ To depend on a release from another crate, pin its tag in that crate's `Cargo.to
 voting = { git = "https://github.com/dermot-r-cochran/Voting", tag = "v0.1.0" }
 ```
 
-The tag shown is an example: no release is tagged yet, so until one is, use `rev = "<commit SHA>"` in place of `tag`.
+`v0.1.0` is the first release tag, made on 18 November 2026. To pin a commit between releases, use `rev = "<commit SHA>"` in place of `tag`.
 
 ## The design note
 
